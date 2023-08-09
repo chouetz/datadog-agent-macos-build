@@ -117,7 +117,7 @@ jobs:
         INSTALLER_CERT_BASE64: ${{ secrets.INSTALLER_CERT_B64 }}
         INSTALLER_CERT_PASSPHRASE: ${{ secrets.INSTALLER_CERT_PASSPHRASE }}
         KEYCHAIN_PWD: ${{ secrets.KEYCHAIN_PASSWORD }}
-        ENABLE_SIGN: ${{ secrets.ENABLE_SIGN }}
+        ENABLE_SIGN: ""
       if: "${{ env.ENABLE_SIGN != '' }}"
       run: |
         # Create temporary build keychain
@@ -172,7 +172,7 @@ jobs:
         INTEGRATION_WHEELS_SKIP_CACHE_UPLOAD: "true"
         S3_OMNIBUS_CACHE_BUCKET: "dd-ci-datadog-agent-omnibus-cache-build-stable"
         S3_OMNIBUS_CACHE_ANONYMOUS_ACCESS: "true"
-        SIGN: ${{ secrets.ENABLE_SIGN }}
+        SIGN: ""
         USE_CACHING_PROXY_RUBY: ${{ secrets.ENABLE_CACHING_PROXY }}
         USE_CACHING_PROXY_PYTHON: ${{ secrets.ENABLE_CACHING_PROXY }}
         ARTIFACTORY_TOKEN: ${{ secrets.ARTIFACTORY_TOKEN }}
@@ -205,7 +205,7 @@ jobs:
 
     - name: Add Mozilla certs to perl env for notarization
       env:
-        ENABLE_SIGN: ${{ secrets.ENABLE_SIGN }}
+        ENABLE_SIGN: ""
       if: "${{ env.ENABLE_SIGN == 'true' }}"
       run: |
         # xpath is a perl tool, without Mozilla:CA certs installed notarization may fail
@@ -227,14 +227,14 @@ jobs:
         APPLE_ACCOUNT: ${{ secrets.APPLE_ACCOUNT }}
         TEAM_ID: ${{ secrets.TEAM_ID }}
         NOTARIZATION_PWD: ${{ secrets.NOTARIZATION_PASSWORD }}
-        ENABLE_SIGN: ${{ secrets.ENABLE_SIGN }}
+        ENABLE_SIGN: ""
       if: "${{ env.ENABLE_SIGN == 'true' }}"
       run: |
         bash ./scripts/notarization_script.sh
 
     - name: Delete temporary keychain
       env:
-        ENABLE_SIGN: ${{ secrets.ENABLE_SIGN }}
+        ENABLE_SIGN: ""
       if: "${{ always() && env.ENABLE_SIGN == 'true' }}"
       run: |
         security delete-keychain "build.keychain"
